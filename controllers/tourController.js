@@ -139,7 +139,7 @@ exports.getTourStats = async (req, res) => {
         }
       },
       {
-        $sort:{
+        $sort: {
           avgPrice: 1
         }
       }
@@ -159,6 +159,15 @@ exports.getTourStats = async (req, res) => {
       status: 'Fail',
       message: err.message
     });
+
+  }
+}
+
+exports.getMonthlyPlan = async (req, res) => {
+  
+  try {
+
+  } catch (err) {
 
   }
 }
