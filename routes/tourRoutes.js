@@ -13,6 +13,6 @@ router.route('/tour-stats').get(tourController.getTourStats);
 
 router.route("/").get(authController.protect ,tourController.getAllTours).post(tourController.createTour);
 
-router.route("/:id").get(tourController.getTour).patch(tourController.updateTour).delete(tourController.deletTour);
+router.route("/:id").get(tourController.getTour).patch(tourController.updateTour).delete(authController.protect , authController.restrictTo('admin' , 'lead-guide') ,tourController.deletTour);
 
 module.exports = router;

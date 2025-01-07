@@ -17,45 +17,50 @@ const userSchema = new mongoose.Schema({
 
     },
     photo: String,
+    role: {
+        type : String,
+        enum : ['user' , 'guide' , 'lead-guid' , 'admin'],
+        default : 'user'
+    },
     password: {
         type: String,
         required: [true, 'Please provide a password'],
         minLength: 8,
-        select : false
+        select: false
     },
-    passwordConfirm : {
-        type : String,
-        required : [true, 'Please Confirm Your Password'],
-        validate : {
-            validator : function (el){
+    passwordConfirm: {
+        type: String,
+        required: [true, 'Please Confirm Your Password'],
+        validate: {
+            validator: function (el) {
                 return el === this.password
             },
-            message : "Passwod do not match"
+            message: "Passwod do not match"
         }
     },
-    passwordChangedAt : Date
+    passwordChangedAt: Date
 
 });
 
-userSchema.pre('save' , async function(next){
-    if(!this.isModified('password')) return next();
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
 
-    this.password = await bcrypt.hash(this.password , 12);
+    this.password = await bcrypt.hash(this.password, 12);
 
     this.passwordConfirm = undefined;
     next();
 });
 
-userSchema.methods.correctPassword = async function (candidatePassword, userPassword){
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
 
-return await bcrypt.compare(candidatePassword, userPassword)
+    return await bcrypt.compare(candidatePassword, userPassword)
 
 };
 
-userSchema.methods.changePasswordAfter = function(JWTTimeStamp){
+userSchema.methods.changePasswordAfter = function (JWTTimeStamp) {
 
-    if(this.passwordChangedAt){
-        const changeTimeStamp = parseInt(this.passwordChangedAt.getTime() /1000,10);
+    if (this.passwordChangedAt) {
+        const changeTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
 
         return JWTTimeStamp < changeTimeStamp;
     }
