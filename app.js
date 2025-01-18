@@ -37,7 +37,7 @@ app.use(
 app.use(mongoSanitize());
 app.use(xss());
 app.use(
-  http({
+  hpp({
     whitelist: [
       "duration",
       "ratingsQuantity",
