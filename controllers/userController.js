@@ -15,15 +15,7 @@ const filterObj = (obj, ...allowedFields)=>{
 
 }
 
-exports.getAllUsers = catchAsync(async (req, res) => {
-  const user = await User.find();
-
-  res.status(200).json({
-    status: "success",
-    results: user.length,
-    user,
-  });
-});
+exports.getAllUsers =factory.getAll(User);
 
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -32,12 +24,7 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not defined yet",
-  });
-};
+exports.getUser = factory.getOne(User);
 
 exports.updateUser = factory.updateOne(User);
 
@@ -73,3 +60,8 @@ res.status(204).json({
 })
 
 });
+
+exports.getMe =  (req, res, next) =>{
+  req.params.id = req.user.id;
+  next();
+}
